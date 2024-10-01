@@ -1,5 +1,3 @@
-import { getNewShuffledDecks } from '../../deck.js'
-
 export const WINNING_HANDS = [
   "High Card",
   "One Pair",
@@ -38,38 +36,34 @@ export const getHighCard = (cards, size = 1) => {
 
 export const getMatchingFaceCards = (cards) => {
     const cardsSortedByFace = getCardsSortedByFace(cards);
-    console.log("cardsSortedByFace", cardsSortedByFace);
-
     const matchingFaceCards = []
-    let currentMatches = null;
+    let currentMatches = [];
+
     cardsSortedByFace.forEach((currentCard, index) => {
-        console.log('currentMatches', currentMatches, currentCard, index)
-        if (!currentMatches) {
+        // setup future match
+        if (!currentMatches.length) {
+            currentMatches.push(currentCard);
+            return;
+        }
+        // no match found
+        if (currentMatches[0].face.value !== currentCard.face.value) {
+            // add last match is applicable
+            if (currentMatches.length > 1) {
+                matchingFaceCards.push(currentMatches)
+            }
+            // reset for future mach
             currentMatches = [currentCard];
             return;
         }
 
-        if (currentMatches[0].face.value === currentCard.face.value) {
-            console.log('match found', currentCard)
-            currentMatches.push(currentCard);
+        // match found
+        currentMatches.push(currentCard);
 
-            if (cardsSortedByFace.length - 1 === index) {
-                matchingFaceCards.push(currentMatches)
-            }
-            return
-        }
-
-        if (currentMatches.length > 1) {
+        // if last iteration and match found, add to stack 
+        if (cardsSortedByFace.length - 1 === index && currentMatches.length > 1) {
             matchingFaceCards.push(currentMatches)
         }
-
-        currentMatches = null;
     });
-
-    // if (currentMatches && currentMatches.length > 1) {
-    //   matchingFaceCards.push(currentMatches);
-    // }
-    console.log('matchingFaceCards!', [...matchingFaceCards]);
 
     return matchingFaceCards.sort((a, b) => b.length - a.length);
 };
@@ -251,8 +245,8 @@ export const getHandRank = (cards, handSize = 5) => {
     const royalFlushCards = straightFlushCards.length && isAce(straightFlushCards[0]) ? straightFlushCards : []
     const flushCards = getFlushCards(cards, handSize) || []
     const straightCards = getStraightCards(cards, handSize) || []
-    const fourOfAKindCards = matchingFaceCards.filter((cards) => cards.length === 4)?.[0] ?? []
-    const threeOfAKindCards = matchingFaceCards.filter((cards) => cards.length === 3)?.[0] ?? []
+    const fourOfAKindCards = matchingFaceCards.filter((cards) => cards.length === 4) ?? []
+    const threeOfAKindCards = matchingFaceCards.filter((cards) => cards.length === 3) ?? []
     const twoOfAKindCards = matchingFaceCards.filter((cards) => cards.length === 2) ?? []
     const fullHouseCards = threeOfAKindCards.length && twoOfAKindCards.length ? [...threeOfAKindCards[0], ...twoOfAKindCards[0]] : []
     const twoPairsCards = twoOfAKindCards.length > 1 ? [...twoOfAKindCards[0], ...twoOfAKindCards[1]] : []
