@@ -9,10 +9,20 @@
     border: 1px solid black;
 }
 
+.selected {
+    background-color: yellow;
+}
+
 .red {
   color: red;
 }
 
 .black {
   color: black;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  grid-gap: 4px;
 }

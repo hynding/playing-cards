@@ -1,5 +1,5 @@
 import { cel, el, qs } from "../../../../utilities/document.js";
-import { getNewShuffledDecks } from "../../deck.js";
+import { getNewDecks, getNewShuffledDecks } from "../../deck.js";
 import {
     getHandRank
 } from "./rules.js";
@@ -24,9 +24,9 @@ function drawHand() {
             ...hand.map((card) =>
                 cel(
                 "div.card",
-                cel(`span.${card.suit.color}`, card.suit.symbol),
+                cel(`span.${card.suit.color}`, card.suit.symbol).get(),
                 card.face.symbol
-                )
+                ).get()
             )
     );
 }
@@ -34,3 +34,51 @@ function drawHand() {
 el("#redraw").ev("click", () => {
   drawHand()
 });
+
+const testHand = []
+
+function drawTestHand() {
+    if (!testHand.length) {
+        el("#test-hand").clear().add("Click cards to add to hand");
+        return;
+    }
+    el("#test-hand")
+      .clear()
+      .add(
+        ...testHand.map((card) =>
+          cel(
+            "div.card",
+            cel(`span.${card.suit.color}`, card.suit.symbol).get(),
+            card.face.symbol
+          ).get()
+        )
+      );
+
+    el('#test-rank-hand').clear().add(getHandRank(testHand, testHand.length < 5 ? testHand.length : 5))
+}
+
+function drawTestDeck() {
+    const deck = getNewDecks()
+
+    el('#test-deck').clear().add(
+        ...deck.map((card) =>
+            cel(
+                "div.card",
+                cel(`span.${card.suit.color}`, card.suit.symbol).get(),
+                card.face.symbol
+            )
+            .ev('click', (_el) => {
+                _el.toggleClass('selected')
+                if (testHand.includes(card)) {
+                    testHand.splice(testHand.indexOf(card), 1)
+                } else {
+                    testHand.push(card)
+                }
+                drawTestHand()
+            })
+            .get()
+        )
+    )
+}
+drawTestDeck()
+drawTestHand()

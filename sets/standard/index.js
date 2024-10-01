@@ -9,9 +9,9 @@ const render = (cards) => {
       ...cards.map((card) =>
         cel(
           "div.card",
-          cel(`span.${card.suit.color}`, card.suit.symbol),
+          cel(`span.${card.suit.color}`, card.suit.symbol).get(),
           card.face.symbol
-        )
+        ).get()
       )
     );
 };

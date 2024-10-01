@@ -8,7 +8,7 @@ export const ce = (selector) => {
 }
 
 export const el = (selector) => {
-    const element = qs(selector)
+    const element = typeof selector === 'string' ? qs(selector) : selector
     const self = {
         clear: () => {
             element.innerHTML = ''
@@ -18,16 +18,22 @@ export const el = (selector) => {
             element.append(...elements)
             return self
         },
-        ev: (event, callback) => {
-            element.addEventListener(event, callback)
+        toggleClass: (className) => {
+            element.classList.toggle(className)
             return self
         },
+        ev: (event, callback) => {
+            element.addEventListener(event, () => {
+                callback(self)
+            })
+            return self
+        },
+        get: () => element
     }
     return self
 }
 
 export const cel = (selector, ...children) => {
-  const element = ce(selector);
-  element.append(...children);
-  return element;
+  const element = el(ce(selector));
+  return element.add(...children);
 };
