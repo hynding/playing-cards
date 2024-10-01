@@ -17,6 +17,10 @@
   color: red;
 }
 
+.picked {
+  background-color: greenyellow;
+}
+
 .black {
   color: black;
 }

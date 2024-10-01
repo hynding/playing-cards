@@ -42,19 +42,26 @@ function drawTestHand() {
         el("#test-hand").clear().add("Click cards to add to hand");
         return;
     }
-    el("#test-hand")
-      .clear()
-      .add(
-        ...testHand.map((card) =>
-          cel(
-            "div.card",
-            cel(`span.${card.suit.color}`, card.suit.symbol).get(),
-            card.face.symbol
-          ).get()
-        )
-      );
 
-    el('#test-rank-hand').clear().add(getHandRank(testHand, testHand.length < 5 ? testHand.length : 5))
+    const [rank, cards] = getHandRank(testHand, testHand.length < 5 ? testHand.length : 5)
+
+    el("#test-hand")
+        .clear()
+        .add(
+            ...testHand.map((card) => {
+                const selector = ['div', 'card']
+                if (cards.includes(card)) {
+                    selector.push('picked')
+                }
+                return cel(
+                    selector.join('.'),
+                    cel(`span.${card.suit.color}`, card.suit.symbol).get(),
+                    card.face.symbol
+                ).get()
+            }
+            )
+        );
+        el('#test-rank-hand').clear().add(rank)
 }
 
 function drawTestDeck() {

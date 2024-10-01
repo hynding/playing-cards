@@ -151,20 +151,20 @@ export const getStraightCards = (cards, length = 5, isAlreadySorted = false) => 
     uniqueFaceCards.forEach((currentCard) => {
         // stop count when highest set caught
         if (straightCards.length === length) {
-        return;
+            return;
         }
         if (!straightCards.length) {
-        straightCards.push(currentCard);
-        return;
+            straightCards.push(currentCard);
+            return;
         }
         const previousCard = straightCards[straightCards.length - 1];
         const previousCardFaceValue = isAce(previousCard) ? 13 : previousCard.face.value;
 
         if (currentCard.face.value + 1 === previousCardFaceValue) {
-        straightCards.push(currentCard);
+            straightCards.push(currentCard);
         } else {
-        // reset if no straight found
-        straightCards = [currentCard];
+            // reset if no straight found
+            straightCards = [currentCard];
         }
     });
 
@@ -229,7 +229,7 @@ export const getStraightFlushCards = (cards, size = 5, isAlreadySorted = false) 
 
   let straightFlushCards = null;
   cardsSortedBySuit.forEach((suitCards) => {
-    const straightCards = isAlreadySorted ? suitCards : getStraightCards(suitCards, size);
+    const straightCards = getStraightCards(suitCards, size);
     if (straightCards?.length === size) {
       straightFlushCards = straightCards;
     }
@@ -240,37 +240,37 @@ export const getStraightFlushCards = (cards, size = 5, isAlreadySorted = false) 
 export const getHandRank = (cards, handSize = 5) => {
     const matchingFaceCards = getMatchingFaceCards(cards);
     const cardsSortedBySuitsAndFace = getCardsSortedBySuit(cards).map((suitCards) => getCardsSortedByFace(suitCards));
-    console.log("matchingFaceCards", matchingFaceCards, cards);
     const straightFlushCards = getStraightFlushCards(cardsSortedBySuitsAndFace, handSize, true) || [];
-    const royalFlushCards = straightFlushCards.length && isAce(straightFlushCards[0]) ? straightFlushCards : []
+    const royalFlushCards = (straightFlushCards.length && isAce(straightFlushCards[0])) ? straightFlushCards : []
     const flushCards = getFlushCards(cards, handSize) || []
     const straightCards = getStraightCards(cards, handSize) || []
     const fourOfAKindCards = matchingFaceCards.filter((cards) => cards.length === 4) ?? []
-    const threeOfAKindCards = matchingFaceCards.filter((cards) => cards.length === 3) ?? []
+    const threeOfAKindCards = matchingFaceCards.filter((cards) => cards.length === 3)?.[0] ?? []
     const twoOfAKindCards = matchingFaceCards.filter((cards) => cards.length === 2) ?? []
-    const fullHouseCards = threeOfAKindCards.length && twoOfAKindCards.length ? [...threeOfAKindCards[0], ...twoOfAKindCards[0]] : []
+    // TODO: FIX: consider a hand with two sets of three of a kind
+    const fullHouseCards = threeOfAKindCards.length && twoOfAKindCards.length ? [...threeOfAKindCards, ...twoOfAKindCards[0]] : []
     const twoPairsCards = twoOfAKindCards.length > 1 ? [...twoOfAKindCards[0], ...twoOfAKindCards[1]] : []
     const onePairCards = twoOfAKindCards.length ? twoOfAKindCards[0] : []
 
     if (royalFlushCards.length) {
-        return 'Royal Flush';
+        return ['Royal Flush', royalFlushCards];
     } else if (straightFlushCards.length) {
-        return 'Straight Flush';
+        return ['Straight Flush', straightFlushCards];
     } else if (fourOfAKindCards.length) {
-        return 'Four of a Kind';
+        return ['Four of a Kind', fourOfAKindCards];
     } else if (fullHouseCards.length) {
-        return 'Full House';
+        return ['Full House', fullHouseCards];
     } else if (flushCards.length) {
-        return 'Flush';
+        return ['Flush', flushCards];
     } else if (straightCards.length) {
-        return 'Straight';
+        return ['Straight', straightCards];
     } else if (threeOfAKindCards.length) {
-        return 'Three of a Kind';
+        return ['Three of a Kind', threeOfAKindCards];
     } else if (twoPairsCards.length) {
-        return 'Two Pairs';
+        return ['Two Pairs', twoPairsCards];
     } else if (onePairCards.length) {
-        return 'One Pair';
+        return ['One Pair', onePairCards];
     } else {
-        return 'High Card';
+        return ['High Card', [getHighCard(cards)]]
     }
 }
