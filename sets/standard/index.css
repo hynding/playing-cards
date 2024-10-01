@@ -1,0 +1,18 @@
+#cards {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    padding: 4px;
+    margin: 2px;
+    border: 1px solid black;
+}
+
+.red {
+  color: red;
+}
+
+.black {
+  color: black;
+}
