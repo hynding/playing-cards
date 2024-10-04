@@ -144,17 +144,18 @@ export const getStraightFlushCards = (cards, size = 5, isAlreadySorted = false) 
 };
 
 const getFullHouseCards = (threeOfAKindCards, twoOfAKindCards) => {
+    // account for cases where more than 5 cards are in play and multipe 3 of a kind are present
     if (threeOfAKindCards.length > 1) {
         if (twoOfAKindCards.length) {
-            const topTwoOfAKindValue = isAce(twoOfAKindCards[0][0]) ? 13 : twoOfAKindCards[0][0].face.value;
-            const topThreeOfAKindValue = isAce(threeOfAKindCards[1][0]) ? 13 : threeOfAKindCards[1][0].face.value;
+            const topTwoOfAKindValue = getFaceValue(twoOfAKindCards[0][0]);
+            const topThreeOfAKindValue = getFaceValue(threeOfAKindCards[1][0]);
             if (topTwoOfAKindValue > topThreeOfAKindValue) {
                 return [...threeOfAKindCards[0], ...twoOfAKindCards[0]];
             } else {
                 return [...threeOfAKindCards[0], threeOfAKindCards[1][0], threeOfAKindCards[1][1]];
             }
         } else {
-            return [...threeOfAKindCards[0], threeOfAKindCards[1][0], threeOfAKindCards[1][1]];
+            return [...threeOfAKindCards[0], ...threeOfAKindCards[1].slice(0, 2)]
         }
     } else if (threeOfAKindCards.length && twoOfAKindCards.length) {
         return [...threeOfAKindCards[0], ...twoOfAKindCards[0]];
@@ -162,7 +163,11 @@ const getFullHouseCards = (threeOfAKindCards, twoOfAKindCards) => {
     return [];
 }
 
-// TODO: fix: Ace should be treated as highest order card by default
+export const getTieBreakingCards = (winningCards, hand, handSize = 5) => {
+    const tieBreakingCards = hand.filter((card) => !winningCards.includes(card));
+    return getCardsSortedByFace(tieBreakingCards).slice(0, handSize - winningCards.length)
+}
+
 export const getHandRank = (cards, handSize = 5) => {
     const matchingFaceCards = getMatchingFaceCards(cards);
     const cardsSortedBySuitsAndFace = getCardsSortedBySuit(cards).map((suitCards) => getCardsSortedByFace(suitCards));
@@ -177,25 +182,26 @@ export const getHandRank = (cards, handSize = 5) => {
     const twoPairsCards = twoOfAKindCards.length > 1 ? [...twoOfAKindCards[0], ...twoOfAKindCards[1]] : []
     const onePairCards = twoOfAKindCards.length ? twoOfAKindCards[0] : []
 
-    if (royalFlushCards.length) {
-        return ['Royal Flush', royalFlushCards];
-    } else if (straightFlushCards.length) {
-        return ['Straight Flush', straightFlushCards];
+    if (royalFlushCards.length > 1) {
+        return ['Royal Flush', royalFlushCards, []];
+    } else if (straightFlushCards.length > 1) {
+        return ['Straight Flush', straightFlushCards, []];
     } else if (fourOfAKindCards.length) {
-        return ['Four of a Kind', fourOfAKindCards[0]];
+        return ['Four of a Kind', fourOfAKindCards[0], getTieBreakingCards(fourOfAKindCards[0], cards, handSize)];
     } else if (fullHouseCards.length) {
-        return ['Full House', fullHouseCards];
-    } else if (flushCards.length) {
-        return ['Flush', flushCards];
-    } else if (straightCards.length) {
-        return ['Straight', straightCards];
+        return ['Full House', fullHouseCards, []];
+    } else if (flushCards.length > 1) {
+        return ['Flush', flushCards, []];
+    } else if (straightCards.length > 1) {
+        return ['Straight', straightCards, []];
     } else if (threeOfAKindCards.length) {
-        return ['Three of a Kind', threeOfAKindCards[0]];
+        return ['Three of a Kind', threeOfAKindCards[0], getTieBreakingCards(threeOfAKindCards[0], cards, handSize)];
     } else if (twoPairsCards.length) {
-        return ['Two Pairs', twoPairsCards];
+        return ['Two Pairs', twoPairsCards, getTieBreakingCards(twoPairsCards, cards, handSize)];
     } else if (onePairCards.length) {
-        return ['One Pair', onePairCards];
+        return ['One Pair', onePairCards, getTieBreakingCards(onePairCards, cards, handSize)];
     } else {
-        return ['High Card', [getHighCard(cards)]]
+        const highCard = getHighCard(cards)
+        return ['High Card', [highCard], getTieBreakingCards([highCard], cards, handSize)]
     }
 }

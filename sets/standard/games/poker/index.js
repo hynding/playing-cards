@@ -16,18 +16,23 @@ function drawHand() {
     const deck = getNewShuffledDecks(1)
     const hand = deck.slice(0, drawn)
 
-    qs("#result").textContent = getHandRank(hand, size);
+    const [rank, cards] = getHandRank(hand, size)
+    qs("#result").textContent = rank
 
     el("#cards")
         .clear()
         .add(
-            ...hand.map((card) =>
-                cel(
-                "div.card",
-                cel(`span.${card.suit.color}`, card.suit.symbol).get(),
-                card.face.symbol
-                ).get()
-            )
+            ...hand.map((card) => {
+                const selector = ['div', 'card']
+                if (cards.includes(card)) {
+                    selector.push('picked')
+                }
+                return cel(
+                    selector.join('.'),
+                    cel(`span.${card.suit.color}`, card.suit.symbol).get(),
+                    card.face.symbol
+                    ).get()
+            })
     );
 }
 
@@ -40,6 +45,7 @@ const testHand = []
 function drawTestHand() {
     if (!testHand.length) {
         el("#test-hand").clear().add("Click cards to add to hand");
+        el('#test-rank-hand').clear();
         return;
     }
 
@@ -89,3 +95,11 @@ function drawTestDeck() {
 }
 drawTestDeck()
 drawTestHand()
+
+el('#test-reset').ev('click', () => {
+    while(testHand.length) {
+        testHand.pop()
+    }
+    drawTestDeck()
+    drawTestHand()
+})
