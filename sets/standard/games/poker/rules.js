@@ -1,51 +1,38 @@
-export const WINNING_HANDS = [
-  "High Card",
-  "One Pair",
-  "Two Pairs",
-  "Three of a Kind",
-  "Straight",
-  "Flush",
-  "Full House",
-  "Four of a Kind",
-  "Straight Flush",
-  "Royal Flush",
-];
-
 const getCardsSortedBySuit = (cards) => {
-  const cardsBySuit = [[], [], [], []];
+  const cardsBySuit = [[], [], [], []]
   cards.forEach((card) => {
-    cardsBySuit[card.suit.value].push(card);
-  });
-  return cardsBySuit;
-};
+    cardsBySuit[card.suit.value].push(card)
+  })
+  return cardsBySuit
+}
 
 const isAce = (card) => {
-  return !card.face.value;
-};
+  return !card.face.value
+}
 
-const getFaceValue = (card) => isAce(card) ? 13 : card.face.value;
+const getFaceValue = (card) => isAce(card) ? 13 : card.face.value
 
 // sorts from highest to lowest with exception of Ace/0
 const getCardsSortedByFace = (cards) => {
   return [...cards].sort((cardA, cardB) => {
-    return getFaceValue(cardB) - getFaceValue(cardA);
-  });
-};
+    return getFaceValue(cardB) - getFaceValue(cardA)
+  })
+}
 
 export const getHighCard = (cards, size = 1) => {
-    return getCardsSortedByFace(cards)[0];
+    return getCardsSortedByFace(cards)[0]
 }
 
 export const getMatchingFaceCards = (cards) => {
-    const cardsSortedByFace = getCardsSortedByFace(cards);
+    const cardsSortedByFace = getCardsSortedByFace(cards)
     const matchingFaceCards = []
-    let currentMatches = [];
+    let currentMatches = []
 
     cardsSortedByFace.forEach((currentCard, index) => {
         // setup future match
         if (!currentMatches.length) {
-            currentMatches.push(currentCard);
-            return;
+            currentMatches.push(currentCard)
+            return
         }
         // no match found
         if (currentMatches[0].face.value !== currentCard.face.value) {
@@ -54,124 +41,124 @@ export const getMatchingFaceCards = (cards) => {
                 matchingFaceCards.push(currentMatches)
             }
             // reset for future mach
-            currentMatches = [currentCard];
-            return;
+            currentMatches = [currentCard]
+            return
         }
 
         // match found
-        currentMatches.push(currentCard);
+        currentMatches.push(currentCard)
 
         // if last iteration and match found, add to stack 
         if (cardsSortedByFace.length - 1 === index && currentMatches.length > 1) {
             matchingFaceCards.push(currentMatches)
         }
-    });
+    })
 
-    return matchingFaceCards.sort((a, b) => b.length - a.length);
-};
+    return matchingFaceCards.sort((a, b) => b.length - a.length)
+}
 
 export const getStraightCards = (cards, length = 5, isAlreadySorted = false) => {
     if (!cards.length) {
         return null
     }
-    const cardsSortedByFace = isAlreadySorted ? cards : getCardsSortedByFace(cards);
+    const cardsSortedByFace = isAlreadySorted ? cards : getCardsSortedByFace(cards)
     const uniqueFaceCards = cardsSortedByFace.filter(
         (card, index, sortedCards) => {
             if (index) {
-                return card.face.value !== sortedCards[index - 1].face.value;
+                return card.face.value !== sortedCards[index - 1].face.value
             }
-            return true;
+            return true
         }
-    );
+    )
 
     // check if first cards is an Ace/0, if so, add it to the end
     if (isAce(uniqueFaceCards[0])) {
-        uniqueFaceCards.push(uniqueFaceCards[0]);
+        uniqueFaceCards.push(uniqueFaceCards[0])
     }
 
-    let straightCards = [];
+    let straightCards = []
     uniqueFaceCards.forEach((currentCard) => {
         // stop count when highest set caught
         if (straightCards.length === length) {
-            return;
+            return
         }
         if (!straightCards.length) {
-            straightCards.push(currentCard);
-            return;
+            straightCards.push(currentCard)
+            return
         }
-        const previousCard = straightCards[straightCards.length - 1];
-        const previousCardFaceValue = getFaceValue(previousCard);
+        const previousCard = straightCards[straightCards.length - 1]
+        const previousCardFaceValue = getFaceValue(previousCard)
 
         if (currentCard.face.value + 1 === previousCardFaceValue) {
-            straightCards.push(currentCard);
+            straightCards.push(currentCard)
         } else {
             // reset if no straight found
-            straightCards = [currentCard];
+            straightCards = [currentCard]
         }
-    });
+    })
 
     if (straightCards.length === length) {
-        return straightCards;
+        return straightCards
     }
 
-    return null;
-};
+    return null
+}
 
 export const getFlushCards = (cards, size = 5) => {
-    const cardsSortedBySuit = getCardsSortedBySuit(cards);
+    const cardsSortedBySuit = getCardsSortedBySuit(cards)
     
-    let flushCards = null;
+    let flushCards = null
     cardsSortedBySuit.forEach((suitCards) => {
         if (suitCards.length >= size) {
-            flushCards = suitCards.slice(0, size);
+            flushCards = suitCards.slice(0, size)
         }
-    });
-    return flushCards;
-};
+    })
+    return flushCards
+}
 
 // TODO: sort highest card set matched (rare cases)
 export const getStraightFlushCards = (cards, size = 5, isAlreadySorted = false) => {
-  const cardsSortedBySuit = isAlreadySorted ? cards : getCardsSortedBySuit(cards);
+  const cardsSortedBySuit = isAlreadySorted ? cards : getCardsSortedBySuit(cards)
 
-  let straightFlushCards = null;
+  let straightFlushCards = null
   cardsSortedBySuit.forEach((suitCards) => {
-    const straightCards = getStraightCards(suitCards, size);
+    const straightCards = getStraightCards(suitCards, size)
     if (straightCards?.length === size) {
-      straightFlushCards = straightCards;
+      straightFlushCards = straightCards
     }
-  });
-  return straightFlushCards;
-};
+  })
+  return straightFlushCards
+}
 
 const getFullHouseCards = (threeOfAKindCards, twoOfAKindCards) => {
     // account for cases where more than 5 cards are in play and multipe 3 of a kind are present
     if (threeOfAKindCards.length > 1) {
         if (twoOfAKindCards.length) {
-            const topTwoOfAKindValue = getFaceValue(twoOfAKindCards[0][0]);
-            const topThreeOfAKindValue = getFaceValue(threeOfAKindCards[1][0]);
+            const topTwoOfAKindValue = getFaceValue(twoOfAKindCards[0][0])
+            const topThreeOfAKindValue = getFaceValue(threeOfAKindCards[1][0])
             if (topTwoOfAKindValue > topThreeOfAKindValue) {
-                return [...threeOfAKindCards[0], ...twoOfAKindCards[0]];
+                return [...threeOfAKindCards[0], ...twoOfAKindCards[0]]
             } else {
-                return [...threeOfAKindCards[0], threeOfAKindCards[1][0], threeOfAKindCards[1][1]];
+                return [...threeOfAKindCards[0], threeOfAKindCards[1][0], threeOfAKindCards[1][1]]
             }
         } else {
             return [...threeOfAKindCards[0], ...threeOfAKindCards[1].slice(0, 2)]
         }
     } else if (threeOfAKindCards.length && twoOfAKindCards.length) {
-        return [...threeOfAKindCards[0], ...twoOfAKindCards[0]];
+        return [...threeOfAKindCards[0], ...twoOfAKindCards[0]]
     }
-    return [];
+    return []
 }
 
 export const getTieBreakingCards = (winningCards, hand, handSize = 5) => {
-    const tieBreakingCards = hand.filter((card) => !winningCards.includes(card));
+    const tieBreakingCards = hand.filter((card) => !winningCards.includes(card))
     return getCardsSortedByFace(tieBreakingCards).slice(0, handSize - winningCards.length)
 }
 
 export const getHandRank = (cards, handSize = 5) => {
-    const matchingFaceCards = getMatchingFaceCards(cards);
-    const cardsSortedBySuitsAndFace = getCardsSortedBySuit(cards).map((suitCards) => getCardsSortedByFace(suitCards));
-    const straightFlushCards = getStraightFlushCards(cardsSortedBySuitsAndFace, handSize, true) || [];
+    const matchingFaceCards = getMatchingFaceCards(cards)
+    const cardsSortedBySuitsAndFace = getCardsSortedBySuit(cards).map((suitCards) => getCardsSortedByFace(suitCards))
+    const straightFlushCards = getStraightFlushCards(cardsSortedBySuitsAndFace, handSize, true) || []
     const royalFlushCards = (straightFlushCards.length && isAce(straightFlushCards[0])) ? straightFlushCards : []
     const flushCards = getFlushCards(cards, handSize) || []
     const straightCards = getStraightCards(cards, handSize) || []
@@ -183,23 +170,23 @@ export const getHandRank = (cards, handSize = 5) => {
     const onePairCards = twoOfAKindCards.length ? twoOfAKindCards[0] : []
 
     if (royalFlushCards.length > 1) {
-        return ['Royal Flush', royalFlushCards, []];
+        return ['Royal Flush', royalFlushCards, []]
     } else if (straightFlushCards.length > 1) {
-        return ['Straight Flush', straightFlushCards, []];
+        return ['Straight Flush', straightFlushCards, []]
     } else if (fourOfAKindCards.length) {
-        return ['Four of a Kind', fourOfAKindCards[0], getTieBreakingCards(fourOfAKindCards[0], cards, handSize)];
+        return ['Four of a Kind', fourOfAKindCards[0], getTieBreakingCards(fourOfAKindCards[0], cards, handSize)]
     } else if (fullHouseCards.length) {
-        return ['Full House', fullHouseCards, []];
+        return ['Full House', fullHouseCards, []]
     } else if (flushCards.length > 1) {
-        return ['Flush', flushCards, []];
+        return ['Flush', flushCards, []]
     } else if (straightCards.length > 1) {
-        return ['Straight', straightCards, []];
+        return ['Straight', straightCards, []]
     } else if (threeOfAKindCards.length) {
-        return ['Three of a Kind', threeOfAKindCards[0], getTieBreakingCards(threeOfAKindCards[0], cards, handSize)];
+        return ['Three of a Kind', threeOfAKindCards[0], getTieBreakingCards(threeOfAKindCards[0], cards, handSize)]
     } else if (twoPairsCards.length) {
-        return ['Two Pairs', twoPairsCards, getTieBreakingCards(twoPairsCards, cards, handSize)];
+        return ['Two Pairs', twoPairsCards, getTieBreakingCards(twoPairsCards, cards, handSize)]
     } else if (onePairCards.length) {
-        return ['One Pair', onePairCards, getTieBreakingCards(onePairCards, cards, handSize)];
+        return ['One Pair', onePairCards, getTieBreakingCards(onePairCards, cards, handSize)]
     } else {
         const highCard = getHighCard(cards)
         return ['High Card', [highCard], getTieBreakingCards([highCard], cards, handSize)]

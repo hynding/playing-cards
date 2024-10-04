@@ -34,6 +34,6 @@ export const el = (selector) => {
 }
 
 export const cel = (selector, ...children) => {
-  const element = el(ce(selector));
-  return element.add(...children);
-};
+  const element = el(ce(selector))
+  return element.add(...children)
+}

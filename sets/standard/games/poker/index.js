@@ -1,8 +1,28 @@
-import { cel, el, qs } from "../../../../utilities/document.js";
-import { getNewDecks, getNewShuffledDecks } from "../../deck.js";
+import { cel, el, qs } from "../../../../utilities/document.js"
+import { getNewDecks, getNewShuffledDecks } from "../../deck.js"
 import {
     getHandRank
-} from "./rules.js";
+} from "./rules.js"
+
+const testHand = []
+
+function drawCards(selector, handCards, pickedCards) {
+    el(selector)
+        .clear()
+        .add(
+            ...handCards.map((card) => {
+                const cardEl = ['div', 'card']
+                if (pickedCards.includes(card)) {
+                    cardEl.push('picked')
+                }
+                return cel(
+                    cardEl.join('.'),
+                    cel(`span.${card.suit.color}`, card.suit.symbol).get(),
+                    card.face.symbol
+                    ).get()
+            })
+    )
+}
 
 function drawHand() {
     qs("#result").textContent = ''
@@ -19,55 +39,20 @@ function drawHand() {
     const [rank, cards] = getHandRank(hand, size)
     qs("#result").textContent = rank
 
-    el("#cards")
-        .clear()
-        .add(
-            ...hand.map((card) => {
-                const selector = ['div', 'card']
-                if (cards.includes(card)) {
-                    selector.push('picked')
-                }
-                return cel(
-                    selector.join('.'),
-                    cel(`span.${card.suit.color}`, card.suit.symbol).get(),
-                    card.face.symbol
-                    ).get()
-            })
-    );
+    drawCards("#cards", hand, cards)
 }
-
-el("#redraw").ev("click", () => {
-  drawHand()
-});
-
-const testHand = []
 
 function drawTestHand() {
     if (!testHand.length) {
-        el("#test-hand").clear().add("Click cards to add to hand");
-        el('#test-rank-hand').clear();
-        return;
+        el("#test-hand").clear().add("Click cards to add to hand")
+        el('#test-rank-hand').clear()
+        return
     }
 
     const [rank, cards] = getHandRank(testHand, testHand.length < 5 ? testHand.length : 5)
 
-    el("#test-hand")
-        .clear()
-        .add(
-            ...testHand.map((card) => {
-                const selector = ['div', 'card']
-                if (cards.includes(card)) {
-                    selector.push('picked')
-                }
-                return cel(
-                    selector.join('.'),
-                    cel(`span.${card.suit.color}`, card.suit.symbol).get(),
-                    card.face.symbol
-                ).get()
-            }
-            )
-        );
-        el('#test-rank-hand').clear().add(rank)
+    drawCards("#test-hand", testHand, cards)
+    el('#test-rank-hand').clear().add(rank)
 }
 
 function drawTestDeck() {
@@ -93,13 +78,25 @@ function drawTestDeck() {
         )
     )
 }
-drawTestDeck()
-drawTestHand()
 
-el('#test-reset').ev('click', () => {
-    while(testHand.length) {
-        testHand.pop()
-    }
+function drawTestSection() {
     drawTestDeck()
     drawTestHand()
-})
+}
+
+function init() {
+    drawTestSection()
+    
+    el("#redraw").ev("click", () => {
+      drawHand()
+    })
+    
+    el('#test-reset').ev('click', () => {
+        while(testHand.length) {
+            testHand.pop()
+        }
+        drawTestSection()
+    })
+}
+
+init()
