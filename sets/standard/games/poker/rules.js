@@ -110,7 +110,7 @@ export const getFlushCards = (cards, size = 5) => {
     let flushCards = null
     cardsSortedBySuit.forEach((suitCards) => {
         if (suitCards.length >= size) {
-            flushCards = suitCards.slice(0, size)
+            flushCards = getCardsSortedByFace(suitCards).slice(0, size)
         }
     })
     return flushCards
