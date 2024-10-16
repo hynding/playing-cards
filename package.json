@@ -1,0 +1,11 @@
+{
+  "name": "playing-cards",
+  "version": "1.0.0",
+  "description": "An arrangement of dependency-free extensible sets, rules, functionality and games for all things involving playing cards",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Steve Hynding",
+  "license": "MIT"
+}
