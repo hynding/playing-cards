@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>War - Playing Cards - Standard - Games</title>
+    <link rel="stylesheet" href="../../index.css">
+    <script src="./index.js" type="module" defer></script>
+  </head>
+  <body>
+    <h1>War - Playing Cards - Standard - Games</h1>
+    <main>
+      <section>
+        <label>Number of Players</label>
+        <input type="number" id="num-players" value="2" min="2" max="13">
+        <br />
+        <label>Number of Decks</label>
+        <input type="number" id="num-decks" value="1" min="1" max="8">
+        <br />
+        <label>Number of Cards to Wage in a War</label>
+        <input type="number" id="num-war-cards" value="4" min="1" max="7">
+        <br />
+        <label>Shuffle Hands After Set Number of Battes</label>
+        <input type="checkbox" id="enable-shuffle" disabled />
+        <br />
+        <label>Number of Battles Before Shuffle</label>
+        <input type="number" id="num-hands-before-shuffle" value="20" min="1" max="1000" disabled />
+        <br />
+        <button id="start-game">Restart Game</button>
+      </section>
+      <hr />
+      <section id="game">
+
+      </section>
+      <section id="actions">
+        <button id="attack">Attack!</button>
+      </section>
+    </main>
+  </body>
+</html>
+
