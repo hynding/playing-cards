@@ -1,0 +1,246 @@
+/*
+ * Games — Playing Cards
+ *
+ * Styles for game-specific elements: players, game boards, controls,
+ * and game status indicators.
+ * Requires variables.css.
+ */
+
+/* ===================================================================
+ * GAME BOARD
+ * =================================================================== */
+
+.game-board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  background-color: var(--color-table);
+  border-radius: var(--radius-lg);
+  min-height: 300px;
+}
+
+/* ===================================================================
+ * GAME CONTROLS
+ * =================================================================== */
+
+.game-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.game-controls label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.game-controls input[type="number"],
+.game-controls input[type="text"],
+.game-controls select {
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  width: 5rem;
+  transition: border-color var(--transition-fast);
+}
+
+.game-controls input[type="number"]:focus,
+.game-controls input[type="text"]:focus,
+.game-controls select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
+.game-controls input[type="checkbox"] {
+  accent-color: var(--color-primary);
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.game-controls input:disabled,
+.game-controls select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===================================================================
+ * GAME RESULT / STATUS
+ * =================================================================== */
+
+.game-result {
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+  border: 2px solid transparent;
+}
+
+.game-result--winner {
+  background-color: var(--color-winner-bg);
+  border-color: var(--color-winner-border);
+  color: var(--color-winner-text);
+}
+
+.game-result--loser {
+  background-color: var(--color-loser-bg);
+  border-color: var(--color-loser-border);
+  color: var(--color-loser-text);
+}
+
+.game-result--war {
+  background-color: var(--color-war-bg);
+  border-color: var(--color-war-border);
+  color: var(--color-war-text);
+}
+
+/* ===================================================================
+ * PLAYER AREA
+ * =================================================================== */
+
+.player {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-inverse);
+}
+
+/* Card-count badge shown next to a player's name */
+.player-info .cards {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6rem;
+  padding: 0 var(--space-xs);
+  height: 1.4rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-inverse);
+}
+
+.player-hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hand-gap);
+  align-items: flex-end;
+  min-height: calc(var(--card-height) + var(--space-sm));
+}
+
+/* ===================================================================
+ * PLAYER STATUS MODIFIERS
+ * =================================================================== */
+
+.player--winner {
+  background-color: rgba(185, 246, 202, 0.15);
+  border-color: var(--color-winner-border);
+}
+
+.player--loser {
+  background-color: rgba(255, 205, 210, 0.15);
+  border-color: var(--color-loser-border);
+}
+
+.player--war {
+  background-color: rgba(255, 243, 224, 0.15);
+  border-color: var(--color-war-border);
+}
+
+/* ===================================================================
+ * ROUND STATUS LABEL
+ * Inline text appended next to played cards (e.g. " <-- WINNER!")
+ * =================================================================== */
+
+.round-status {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.round-status--winner {
+  color: var(--color-winner-text);
+  background-color: var(--color-winner-bg);
+}
+
+.round-status--loser {
+  color: var(--color-loser-text);
+  background-color: var(--color-loser-bg);
+}
+
+.round-status--war {
+  color: var(--color-war-text);
+  background-color: var(--color-war-bg);
+}
+
+/* ===================================================================
+ * HAND RANK (Poker)
+ * =================================================================== */
+
+.hand-rank {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-inverse);
+  background-color: rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-md);
+  letter-spacing: 0.03em;
+}
+
+/* ===================================================================
+ * TEST SECTION (Poker hand tester)
+ * =================================================================== */
+
+.test-hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hand-gap);
+  border: 1px solid var(--color-border-strong);
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  min-width: 300px;
+  min-height: calc(var(--card-height) + var(--space-md));
+  background-color: var(--color-table-dark);
+}
+
+/* ===================================================================
+ * BATTLE STATS
+ * =================================================================== */
+
+.battle-stats {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.battle-count {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--font-weight-semibold);
+}
