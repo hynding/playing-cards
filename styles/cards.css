@@ -1,0 +1,237 @@
+/*
+ * Card Components — Playing Cards
+ *
+ * Styles for individual cards, hands, and deck display.
+ * Requires variables.css.
+ */
+
+/* ===================================================================
+ * CARD
+ * =================================================================== */
+
+.card {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: var(--card-width);
+  height: var(--card-height);
+  padding: var(--card-padding);
+  background-color: var(--card-bg);
+  border: var(--card-border-width) solid var(--card-border-color);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--shadow-card);
+  font-family: var(--font-family);
+  font-size: var(--font-size-card-face);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  user-select: none;
+  cursor: var(--card-cursor-default);
+  transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+/* --- Size variants --- */
+
+.card--sm {
+  width: var(--card-width-sm);
+  height: var(--card-height-sm);
+  font-size: var(--font-size-card-face-sm);
+  padding: var(--space-xs);
+}
+
+.card--lg {
+  width: var(--card-width-lg);
+  height: var(--card-height-lg);
+  font-size: var(--font-size-card-face-lg);
+  padding: var(--space-md);
+}
+
+/* --- Interactive card (clickable) --- */
+
+.card--interactive,
+.card[role="button"] {
+  cursor: var(--card-cursor-interactive);
+}
+
+.card--interactive:hover,
+.card[role="button"]:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.card--interactive:focus-visible,
+.card[role="button"]:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* --- Card face (the front of a card) --- */
+
+.card--face {
+  background-color: var(--card-bg);
+}
+
+/* --- Card back (face-down) --- */
+
+.card--back {
+  background-color: var(--card-back-bg);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--card-back-stripe) 0px,
+    var(--card-back-stripe) 2px,
+    transparent 2px,
+    transparent 8px
+  );
+  color: transparent;
+}
+
+/* ===================================================================
+ * CARD INNER ELEMENTS
+ * =================================================================== */
+
+/* Suit symbol (♠ ♥ ♦ ♣) */
+.card-suit {
+  display: block;
+  font-size: var(--font-size-card-suit);
+  line-height: 1;
+}
+
+.card--sm .card-suit {
+  font-size: var(--font-size-card-suit-sm);
+}
+
+.card--lg .card-suit {
+  font-size: var(--font-size-card-suit-lg);
+}
+
+/* Face value label (A 2 … K) */
+.card-face {
+  display: block;
+  font-size: var(--font-size-card-face);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.card--sm .card-face {
+  font-size: var(--font-size-card-face-sm);
+}
+
+.card--lg .card-face {
+  font-size: var(--font-size-card-face-lg);
+}
+
+/* ===================================================================
+ * CARD STATE MODIFIERS
+ * =================================================================== */
+
+/* Selected — card chosen/toggled by the user */
+.card.selected,
+.card--selected {
+  background-color: var(--color-selected-bg);
+  box-shadow: var(--shadow-card-selected);
+}
+
+/* Picked — winning or ranked card highlighted by the game */
+.card.picked,
+.card--picked {
+  background-color: var(--color-picked-bg);
+  box-shadow: var(--shadow-card-picked);
+}
+
+/* Winner card */
+.card--winner {
+  background-color: var(--color-winner-bg);
+  border-color: var(--color-winner-border);
+}
+
+/* Loser card */
+.card--loser {
+  background-color: var(--color-loser-bg);
+  border-color: var(--color-loser-border);
+}
+
+/* War card (tied round) */
+.card--war {
+  background-color: var(--color-war-bg);
+  border-color: var(--color-war-border);
+}
+
+/* ===================================================================
+ * SUIT COLOR CLASSES
+ * Applied to the suit symbol element (span) inside a card
+ * =================================================================== */
+
+.red {
+  color: var(--color-red);
+}
+
+.black {
+  color: var(--color-black);
+}
+
+/* Suit-specific (same colors, named explicitly for clarity) */
+.hearts,
+.diamonds {
+  color: var(--color-red);
+}
+
+.spades,
+.clubs {
+  color: var(--color-black);
+}
+
+/* ===================================================================
+ * HAND
+ * A horizontal (or wrapping) row of cards belonging to one player
+ * =================================================================== */
+
+.hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hand-gap);
+  align-items: flex-end;
+}
+
+/* Fan layout — cards slightly overlap */
+.hand--fan .card + .card {
+  margin-left: calc(var(--card-width) * -0.55);
+}
+
+.hand--fan .card:hover {
+  z-index: var(--z-raised);
+  margin-left: 0;
+}
+
+/* ===================================================================
+ * DECK
+ * =================================================================== */
+
+/* Flex (default) deck — wrapping row of all cards */
+#cards,
+.deck {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--deck-gap);
+}
+
+/* Grid deck — 13-column layout (one column per face value) */
+.deck--grid,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols-deck), 1fr);
+  gap: var(--grid-gap);
+}
+
+/* 4-column grid (one per suit) */
+.deck--suits {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols-suits), 1fr);
+  gap: var(--grid-gap);
+}
+
+/* Card count badge / label */
+.card-count {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}

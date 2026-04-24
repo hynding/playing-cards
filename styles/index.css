@@ -1,0 +1,83 @@
+/*
+ * Playing Cards — Global Stylesheet
+ *
+ * Import this file in any HTML page to get the full set of
+ * design tokens, card components, layout helpers, game styles,
+ * and utility classes.
+ *
+ * Import order matters:
+ *   1. variables  — CSS custom properties (design tokens)
+ *   2. cards      — card/hand/deck components
+ *   3. layout     — flex, grid, spacing, containers
+ *   4. games      — game board, players, controls, status
+ *   5. utilities  — buttons, typography, state helpers
+ */
+
+@import "./variables.css";
+@import "./cards.css";
+@import "./layout.css";
+@import "./games.css";
+@import "./utilities.css";
+
+/* ===================================================================
+ * GLOBAL BASE RESET
+ * Light reset so all pages start from a consistent baseline.
+ * =================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: var(--space-md);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: var(--space-md);
+}
+
+ul, ol {
+  margin-top: 0;
+  margin-bottom: var(--space-md);
+  padding-left: var(--space-lg);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin-block: var(--space-lg);
+}
+
+button {
+  font-family: var(--font-family);
+  cursor: pointer;
+}
