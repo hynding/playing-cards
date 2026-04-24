@@ -167,29 +167,29 @@ button:disabled {
 
 .state--selected {
   background-color: var(--color-selected-bg);
-  border-color: var(--color-selected-border) !important;
+  border-color: var(--color-selected-border);
 }
 
 .state--picked {
   background-color: var(--color-picked-bg);
-  border-color: var(--color-picked-border) !important;
+  border-color: var(--color-picked-border);
 }
 
 .state--winner {
   background-color: var(--color-winner-bg);
-  border-color: var(--color-winner-border) !important;
+  border-color: var(--color-winner-border);
   color: var(--color-winner-text);
 }
 
 .state--loser {
   background-color: var(--color-loser-bg);
-  border-color: var(--color-loser-border) !important;
+  border-color: var(--color-loser-border);
   color: var(--color-loser-text);
 }
 
 .state--war {
   background-color: var(--color-war-bg);
-  border-color: var(--color-war-border) !important;
+  border-color: var(--color-war-border);
   color: var(--color-war-text);
 }
 
